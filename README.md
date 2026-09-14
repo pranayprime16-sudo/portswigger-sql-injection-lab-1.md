@@ -1,33 +1,26 @@
-# PortSwigger SQL Injection Lab 1: Retrieve Hidden Data
+# SQL Injection Lab 1: Retrieve Hidden Data
 
-## Vulnerability Type
-SQL Injection (SQLi)
+## What the Lab Asked
+Find hidden products that aren't normally visible on the website.
 
-## Lab Difficulty
-Easy
+## What I Did
+I found a filter on the website that shows products by category.
+I tested if this filter was vulnerable to SQL injection.
 
-## Objective
-Retrieve hidden data from the database by manipulating SQL query
+## My Attack
+In the category URL, I typed: Gifts' OR '1'='1--
 
-## Vulnerability Found
-The `category` parameter in the URL is vulnerable to SQL injection.\
+## How It Worked
+- The single quote (') broke the original filter
+- OR '1'='1 added a condition that's always true
+- The double dash (--) removed any other code
+- Result: Website showed ALL products including hidden ones
 
-## Attack Payload
-## How It Works
-1. `'` - Closes the original string
-2. `OR` - Adds new condition
-3. `1'='1` - Always true (returns all data)
-4. `--` - Comments out rest of query
-
-## Result
-✅ Lab Completed - All products shown including hidden ones
-
-## Key Learning
-- Always validate user input
-- Never concatenate user input directly into SQL queries
-- Use parameterized queries instead
+## What I Learned
+Websites that don't check user input are vulnerable.
+An attacker can manipulate SQL queries using quotes and boolean logic.
 
 ## Prevention
-- Use prepared statements
-- Input validation
-- Least privilege database access
+- Always validate user input
+- Use parameterized queries
+- Don't concatenate user input into SQL
