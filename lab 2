@@ -1,28 +1,25 @@
-# PortSwigger SQL Injection Lab 2: Login Bypass
+# SQL Injection Lab 2: Login Bypass
 
-## Vulnerability
-SQL Injection in login form
+## What the Lab Asked
+Login to the admin account without knowing the password.
 
-## Attack
-Username: administrator'--
-Password: 'anything' (blank)
+## What I Discovered
+The login form takes username and password and checks them in the database.
+If both match, you login. If not, you fail.
 
-## How It Works
-- ' closes the string
-- -- comments out password check
-- Website ignores password verification
-- Login succeeds without correct password
+## My Attack
+I entered: administrator'--
+Left password blank.
 
-## Payload Breakdown
-administrator'-- 
-- Closes username string
-- Comments out: AND password = 'xxx'
-- Database only checks username
-- Result: Bypass authentication
+## Why It Worked
+The single quote (') broke the original SQL query.
+The double dash (--) commented out the password check.
+So the database only verified the username, ignored the password.
 
 ## Result
-✅ Logged in as administrator without password
+Successfully logged in as admin without the password!
 
-## Prevention
-- Use parameterized queries
-- Never concatenate user input to SQL
+## What I Learned
+Never trust user input directly in SQL queries.
+Always validate and sanitize input.
+Use prepared statements instead.
