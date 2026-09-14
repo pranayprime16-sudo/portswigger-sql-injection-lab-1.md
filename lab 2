@@ -1,0 +1,28 @@
+# PortSwigger SQL Injection Lab 2: Login Bypass
+
+## Vulnerability
+SQL Injection in login form
+
+## Attack
+Username: administrator'--
+Password: 'anything' (blank)
+
+## How It Works
+- ' closes the string
+- -- comments out password check
+- Website ignores password verification
+- Login succeeds without correct password
+
+## Payload Breakdown
+administrator'-- 
+- Closes username string
+- Comments out: AND password = 'xxx'
+- Database only checks username
+- Result: Bypass authentication
+
+## Result
+✅ Logged in as administrator without password
+
+## Prevention
+- Use parameterized queries
+- Never concatenate user input to SQL
