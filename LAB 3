@@ -1,0 +1,50 @@
+"""
+Defensive SQL Query Handler
+Demonstrates secure data retrieval using parameterized queries in SQLite.
+"""
+
+import sqlite3
+
+def init_db():
+    """Initializes an in-memory database with standard product data."""
+    conn = sqlite3.connect(':memory:')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE products (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            category TEXT,
+            price REAL
+        )
+    ''')
+    cursor.executemany('''
+        INSERT INTO products (name, category, price) VALUES (?, ?, ?)
+    ''', [
+        ('Giant Pillow Thing', 'Gifts', 92.30),
+        ('Cheshire Cat Grin', 'Gifts', 34.88),
+        ('Eco Boat', 'Lifestyle', 54.64)
+    ])
+    conn.commit()
+    return conn
+
+def get_products_by_category_secure(conn, category_name):
+    """
+    Retrieves products safely using parameterized inputs to prevent 
+    SQL syntax modification or unauthorized operator injection.
+    """
+    cursor = conn.cursor()
+    # Parameterized placeholder '?' ensures input is strictly treated as data
+    query = "SELECT name, category, price FROM products WHERE category = ?"
+    cursor.execute(query, (category_name,))
+    return cursor.fetchall()
+
+if __name__ == "__main__":
+    db_conn = init_db()
+    
+    # Example execution
+    user_input = "Gifts"
+    results = get_products_by_category_secure(db_conn, user_input)
+    
+    print(f"Query Results for category '{user_input}':")
+    for row in results:
+        print(f" - Name: {row[0]}, Category: {row[1]}, Price: ${row[2]}")
